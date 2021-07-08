@@ -2,6 +2,8 @@ import uuid
 import json
 import glob
 
+from classes.Chain import Chain
+
 
 class Wallet:
 
@@ -30,6 +32,8 @@ class Wallet:
     def send(self, receiver_id, amount):
         receiver_wallet = Wallet()
         receiver_wallet.load(receiver_id)
+        chain = Chain()
+        chain.add_transaction(self, receiver_wallet, amount)
 
     def save(self):
         data = {"unique_id": self.unique_id, "balance": self.balance, "history": self.history}

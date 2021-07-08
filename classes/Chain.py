@@ -38,8 +38,10 @@ class Chain:
         block.load(block_hash)
         return block
 
-    def add_transaction(self, block: Block, sender_wallet: Wallet, receiver_wallet: Wallet, amount):
+    def add_transaction(self, sender_wallet: Wallet, receiver_wallet: Wallet, amount):
         # TODO better implementation of weight
+        block = Block()
+        block.load(self.blocks[-1])
         if block.get_weight() >= 255999:
             block = self.add_block()
         block.add_transaction(sender_wallet, receiver_wallet, amount)
