@@ -22,6 +22,7 @@ class Wallet:
         return generated_id
 
     def add_balance(self, value):
+        # TODO add in history when received
         self.balance += value
         self.save()
 

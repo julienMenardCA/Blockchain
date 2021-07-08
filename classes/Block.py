@@ -21,15 +21,15 @@ class Block:
         else:
             return False
 
-    def add_transaction(self, sender_wallet: Wallet, receiver_wallet: Wallet, amount):
+    def add_transaction(self, sender_wallet: Wallet, receiver_wallet: Wallet, amount, transaction):
         sender_wallet.sub_balance(amount)
         receiver_wallet.add_balance(amount)
-        self.transactions.append(
-            {'num_transaction': len(self.transactions) + 1, 'sender': sender_wallet, 'receiver': receiver_wallet,
-             'amount': amount, 'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S:%f')})
+        transaction['num_transaction'] = len(self.transactions) + 1
+        self.transactions.append(transaction)
         self.save()
 
     def get_transaction(self, num_transaction):
+        # TODO retrieval of transaction
         pass
 
     def get_weight(self):
@@ -37,7 +37,7 @@ class Block:
 
     def save(self):
         data = {"hash": self.hash, "parent_hash": self.parent_hash, "transactions": self.transactions}
-        with open('../content/blocks/' + self.hash + '.json', 'w') as outfile:
+        with open('../content/blocks/' + self.hash + '.json', 'w', encoding='utf8') as outfile:
             json.dump(data, outfile, sort_keys=True, indent=4)
 
     def load(self, block_hash):
