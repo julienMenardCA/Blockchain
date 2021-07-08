@@ -1,7 +1,6 @@
 import json
 import os
 import hashlib
-from datetime import datetime
 
 from classes.Wallet import Wallet
 
