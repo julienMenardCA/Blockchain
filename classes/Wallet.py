@@ -5,9 +5,9 @@ import glob
 
 class Wallet:
 
-    def __init__(self):
-        self.unique_id = "00"
-        self.balance = 0
+    def __init__(self, unique_id='00'):
+        self.unique_id = unique_id
+        self.balance = 100
         self.history = []
 
     def generate_unique_id(self):
@@ -21,12 +21,15 @@ class Wallet:
 
     def add_balance(self, value):
         self.balance += value
+        self.save()
 
     def sub_balance(self, value):
         self.balance -= value
+        self.save()
 
-    def send(self):
-        pass
+    def send(self, receiver_id, amount):
+        receiver_wallet = Wallet()
+        receiver_wallet.load(receiver_id)
 
     def save(self):
         data = {"unique_id": self.unique_id, "balance": self.balance, "history": self.history}
