@@ -42,8 +42,11 @@ class Wallet:
             json.dump(data, outfile, sort_keys=True, indent=4)
 
     def load(self, wallet_id):
-        with open('../content/wallets/' + wallet_id + '.json') as json_file:
-            data = json.load(json_file)
-            self.unique_id = data['unique_id']
-            self.balance = data['balance']
-            self.history = data['history']
+        try:
+            with open('../content/wallets/' + wallet_id + '.json') as json_file:
+                data = json.load(json_file)
+                self.unique_id = data['unique_id']
+                self.balance = data['balance']
+                self.history = data['history']
+        except FileNotFoundError:
+            return False

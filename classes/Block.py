@@ -28,8 +28,8 @@ class Block:
         self.save()
 
     def get_transaction(self, num_transaction):
-        # TODO retrieval of transaction
-        pass
+        index = self.transactions.index({'num_transaction': num_transaction})
+        return self.transactions[index]
 
     def get_weight(self):
         return os.stat('../content/blocks/' + self.hash + '.json').st_size
@@ -40,8 +40,11 @@ class Block:
             json.dump(data, outfile, sort_keys=True, indent=4)
 
     def load(self, block_hash):
-        with open('../content/blocks/' + block_hash + '.json') as json_file:
-            data = json.load(json_file)
-            self.hash = data['hash']
-            self.parent_hash = data['parent_hash']
-            self.transactions = data['transactions']
+        try:
+            with open('../content/blocks/' + block_hash + '.json') as json_file:
+                data = json.load(json_file)
+                self.hash = data['hash']
+                self.parent_hash = data['parent_hash']
+                self.transactions = data['transactions']
+        except FileNotFoundError:
+            return False
