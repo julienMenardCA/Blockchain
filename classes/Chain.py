@@ -45,6 +45,8 @@ class Chain:
         transaction = {'num_transaction': '', 'sender': sender_wallet, 'receiver': receiver_wallet, 'amount': amount,
                        'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S:%f')}
         block = Block()
+        if self.blocks[0] == '00':
+            block = self.add_block()
         block.load(self.blocks[-1])
         if block.get_weight() + len(json.dumps(transaction).encode('utf8')) > 256000:
             block = self.add_block()
