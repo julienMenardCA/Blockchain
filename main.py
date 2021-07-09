@@ -84,7 +84,7 @@ def wallet():
 
 def main():
     answer = ''
-    print("Hello and welcome to the Best BlockChain Evert™!")
+    print("Hello and welcome to the Best BlockChain Evert™! (or not...)")
     while answer != 'q':
         answer = input("Please enter a command (type 'h' for a list of commands) : ")
         if answer == 'h':

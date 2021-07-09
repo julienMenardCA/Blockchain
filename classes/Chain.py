@@ -52,8 +52,9 @@ class Chain:
                 listOfFiles = os.listdir(os.getcwd() + '/content/blocks/')
                 listOfBlocksFromFiles = [x.split('.')[0] for x in listOfFiles]
                 self.blocks += listOfBlocksFromFiles[1:]
-                block = self.add_block()
-                block.save()
+                if len(self.blocks) == 1:
+                    block = self.add_block()
+                    block.save()
             block.load(self.blocks[-1])
             if block.get_weight() + len(json.dumps(transaction).encode('utf8')) > 256000:
                 block = self.add_block()

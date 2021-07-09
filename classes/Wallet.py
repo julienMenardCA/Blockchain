@@ -39,6 +39,7 @@ class Wallet:
                 transaction = {'transaction_type': 'send', 'receiver': receiver_id, 'amount': int(amount),
                                'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S:%f')}
                 self.history.append(transaction)
+                self.save()
                 return True
             else:
                 return 'BalanceError'
