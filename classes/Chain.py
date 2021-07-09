@@ -1,10 +1,10 @@
 import hashlib
 import glob
 import json
+import os
 from datetime import datetime
 
-from classes.Block import Block
-from classes.Wallet import Wallet
+import classes
 
 
 class Chain:
@@ -31,29 +31,36 @@ class Chain:
 
     def add_block(self):
         block_hash = self.generate_hash()
-        block = Block(self.str_hashed, block_hash, self.blocks[-1])
+        block = classes.Block.Block(self.str_hashed, block_hash, self.blocks[-1])
         self.blocks.append(block_hash)
         return block
 
     @staticmethod
     def get_block(block_hash):
-        block = Block()
+        block = classes.Block.Block()
         block.load(block_hash)
         return block
 
-    def add_transaction(self, sender_wallet: Wallet, receiver_wallet: Wallet, amount):
-        if sender_wallet.balance >= amount:
-            transaction = {'num_transaction': '', 'sender': sender_wallet, 'receiver': receiver_wallet,
-                           'amount': amount,
+    def add_transaction(self, sender_wallet, receiver_wallet, amount):
+        if sender_wallet.balance >= int(amount):
+            transaction = {'num_transaction': '', 'sender': sender_wallet.unique_id,
+                           'receiver': receiver_wallet.unique_id,
+                           'amount': int(amount),
                            'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S:%f')}
-            block = Block()
-            if self.blocks[0] == '00':
+            block = classes.Block.Block()
+            if self.blocks[-1] == '00':
+                listOfFiles = os.listdir(os.getcwd() + '/content/blocks/')
+                listOfBlocksFromFiles = [x.split('.')[0] for x in listOfFiles]
+                self.blocks += listOfBlocksFromFiles[1:]
                 block = self.add_block()
+                block.save()
             block.load(self.blocks[-1])
             if block.get_weight() + len(json.dumps(transaction).encode('utf8')) > 256000:
                 block = self.add_block()
+                block.save()
             block.add_transaction(sender_wallet, receiver_wallet, amount, transaction)
             self.last_transaction_number += 1
+            return True
         else:
             return False
 

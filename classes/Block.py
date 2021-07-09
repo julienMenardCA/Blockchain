@@ -2,8 +2,6 @@ import json
 import os
 import hashlib
 
-from classes.Wallet import Wallet
-
 
 class Block:
 
@@ -20,10 +18,10 @@ class Block:
         else:
             return False
 
-    def add_transaction(self, sender_wallet: Wallet, receiver_wallet: Wallet, amount, transaction):
+    def add_transaction(self, sender_wallet, receiver_wallet, amount, transaction):
         sender_wallet.sub_balance(amount)
+        receiver_wallet.receive(sender_wallet.unique_id, amount)
         receiver_wallet.add_balance(amount)
-        receiver_wallet.receive(receiver_wallet.unique_id, amount)
         transaction['num_transaction'] = len(self.transactions) + 1
         self.transactions.append(transaction)
         self.save()
@@ -33,16 +31,16 @@ class Block:
         return self.transactions[index]
 
     def get_weight(self):
-        return os.stat('../content/blocks/' + self.hash + '.json').st_size
+        return os.stat(os.getcwd() + '/content/blocks/' + self.hash + '.json').st_size
 
     def save(self):
         data = {"hash": self.hash, "parent_hash": self.parent_hash, "transactions": self.transactions}
-        with open('../content/blocks/' + self.hash + '.json', 'w', encoding='utf8') as outfile:
-            json.dump(data, outfile, sort_keys=True, indent=4)
+        with open(os.getcwd() + '/content/blocks/' + self.hash + '.json', 'w', encoding='utf8') as outfile:
+            json.dump(data, outfile, indent=4)
 
     def load(self, block_hash):
         try:
-            with open('../content/blocks/' + block_hash + '.json') as json_file:
+            with open(os.getcwd() + '/content/blocks/' + block_hash + '.json') as json_file:
                 data = json.load(json_file)
                 self.hash = data['hash']
                 self.parent_hash = data['parent_hash']
