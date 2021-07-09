@@ -23,6 +23,7 @@ class Block:
     def add_transaction(self, sender_wallet: Wallet, receiver_wallet: Wallet, amount, transaction):
         sender_wallet.sub_balance(amount)
         receiver_wallet.add_balance(amount)
+        receiver_wallet.receive(receiver_wallet.unique_id, amount)
         transaction['num_transaction'] = len(self.transactions) + 1
         self.transactions.append(transaction)
         self.save()

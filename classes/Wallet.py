@@ -1,6 +1,7 @@
 import uuid
 import json
 import glob
+from datetime import datetime
 
 from classes.Chain import Chain
 
@@ -22,7 +23,6 @@ class Wallet:
         return generated_id
 
     def add_balance(self, value):
-        # TODO add in history when received
         self.balance += value
         self.save()
 
@@ -35,6 +35,14 @@ class Wallet:
         receiver_wallet.load(receiver_id)
         chain = Chain()
         chain.add_transaction(self, receiver_wallet, amount)
+        transaction = {'transaction_type': 'send', 'receiver': receiver_id, 'amount': amount,
+                       'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S:%f')}
+        self.history.append(transaction)
+
+    def receive(self, sender_id, amount):
+        transaction = {'transaction_type': 'receive', 'sender': sender_id, 'amount': amount,
+                       'date': datetime.today().strftime('%Y-%m-%d-%H:%M:%S:%f')}
+        self.history.append(transaction)
 
     def save(self):
         data = {"unique_id": self.unique_id, "balance": self.balance, "history": self.history}
